@@ -1,7 +1,6 @@
 package com.example.demo.config;
 
 import lombok.RequiredArgsConstructor;
-import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -56,13 +55,5 @@ public class DBConfig {
         jpaTransactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
 
         return jpaTransactionManager;
-    }
-
-    @Bean
-    public Flyway flyway() {
-        return Flyway.configure()
-                .dataSource(dataSource())
-                .locations("classpath:db/migration")
-                .load();
     }
 }
