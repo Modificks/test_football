@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
@@ -29,4 +30,6 @@ public class TeamDTO {
     @Max(value = 10, message = "Max size of commission must be 10%")
     @Min(value = 0, message = "Min size of commission must be 0%")
     private BigDecimal commission;
+
+//    private List<PlayerDTO> playerDTOS;
 }

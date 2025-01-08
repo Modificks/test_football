@@ -1,7 +1,9 @@
 package com.example.demo.service.implementation;
 
+import com.example.demo.domain.entity.Player;
 import com.example.demo.domain.entity.Team;
 import com.example.demo.exception.EntityAlreadyExistsException;
+import com.example.demo.repository.PlayerRepository;
 import com.example.demo.repository.TeamRepository;
 import com.example.demo.service.TeamService;
 import com.example.demo.viewLayer.dto.TeamDTO;
@@ -12,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,6 +24,7 @@ import java.util.stream.Collectors;
 public class TeamServiceImplementation implements TeamService {
 
     private final TeamRepository teamRepository;
+    private final PlayerRepository playerRepository;
 
     private final TeamMapper teamMapper;
 
@@ -43,6 +47,15 @@ public class TeamServiceImplementation implements TeamService {
 
         return teams.stream()
                 .map(teamMapper::toDto)
+//                .map(team -> {
+//                    TeamDTO teamDTO = teamMapper.toDto(team);
+//                    teamDTO.setPlayerDTOS(team.getPlayers().stream()
+//                            .map(playerMapper::toDto)
+//                            .collect(Collectors.toList())
+//                    );
+//
+//                    return teamDTO;
+//                })
                 .collect(Collectors.toSet());
     }
 
@@ -81,6 +94,13 @@ public class TeamServiceImplementation implements TeamService {
     public void deleteByName(long id) {
         if (!teamRepository.existsById(id)) {
             throw new EntityNotFoundException("Team with id: '" + id + "' does not exist");
+        }
+
+        List<Player> playersInTeam = playerRepository.findByTeamId(id);
+
+        for (Player player : playersInTeam) {
+            player.setTeam(null);
+            playerRepository.save(player);
         }
 
         teamRepository.deleteById(id);

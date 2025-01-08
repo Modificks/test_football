@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -33,6 +34,9 @@ public class Team {
 
     @Column(name = "commission")
     private BigDecimal commission;
+
+    @OneToMany(mappedBy = "team")
+    private List<Player> players;
 
     @Override
     public boolean equals(Object o) {
