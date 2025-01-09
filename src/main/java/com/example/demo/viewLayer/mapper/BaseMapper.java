@@ -1,6 +1,6 @@
 package com.example.demo.viewLayer.mapper;
 
-public interface BaseMapper <E, D>{
+public interface BaseMapper <E, D> {
 
     D toDto(E e);
 

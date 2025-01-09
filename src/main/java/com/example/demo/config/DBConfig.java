@@ -17,16 +17,16 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
 
 @Configuration
-@EnableJpaRepositories(basePackages = "com.example.demo.repository")
-@EnableTransactionManagement
 @RequiredArgsConstructor
+@EnableTransactionManagement
+@EnableJpaRepositories(basePackages = "com.example.demo.repository")
 public class DBConfig {
 
     @Value("${spring.datasource.url}")
     private String dataSourceUrl;
 
-    @Bean(name = "dataSource")
     @Primary
+    @Bean(name = "dataSource")
     @ConfigurationProperties(prefix = "spring.datasource")
     public DataSource dataSource() {
         return DataSourceBuilder

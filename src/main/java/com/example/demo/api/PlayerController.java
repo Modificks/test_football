@@ -1,8 +1,8 @@
 package com.example.demo.api;
 
 import com.example.demo.service.PlayerService;
-import com.example.demo.viewLayer.dto.PlayerDTO;
-import com.example.demo.viewLayer.dto.PlayerRegisterDTO;
+import com.example.demo.viewLayer.dto.playerDTOs.PlayerDTO;
+import com.example.demo.viewLayer.dto.playerDTOs.PlayerRegisterDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,11 +21,11 @@ public class PlayerController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public PlayerDTO create(@Valid @RequestBody PlayerRegisterDTO playerDTO) {
-        return playerService.createPlayer(playerDTO);
+    public PlayerDTO create(@Valid @RequestBody PlayerRegisterDTO playerRegisterDTODTO) {
+        return playerService.createPlayer(playerRegisterDTODTO);
     }
 
-    @GetMapping("/get-all-players")
+    @GetMapping("/get-all")
     public List<PlayerDTO> getAllPlayers() {
         return playerService.getAll();
     }

@@ -1,13 +1,13 @@
 package com.example.demo.service;
 
-import com.example.demo.viewLayer.dto.PlayerDTO;
-import com.example.demo.viewLayer.dto.PlayerRegisterDTO;
+import com.example.demo.viewLayer.dto.playerDTOs.PlayerDTO;
+import com.example.demo.viewLayer.dto.playerDTOs.PlayerRegisterDTO;
 
 import java.util.List;
 
 public interface PlayerService {
 
-    PlayerDTO createPlayer(PlayerRegisterDTO PlayerRegisterDTO);
+    PlayerDTO createPlayer(PlayerRegisterDTO playerRegisterDTO);
 
     List<PlayerDTO> getAll();
 

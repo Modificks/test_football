@@ -5,8 +5,8 @@ import com.example.demo.domain.entity.Team;
 import com.example.demo.repository.PlayerRepository;
 import com.example.demo.repository.TeamRepository;
 import com.example.demo.service.PlayerService;
-import com.example.demo.viewLayer.dto.PlayerDTO;
-import com.example.demo.viewLayer.dto.PlayerRegisterDTO;
+import com.example.demo.viewLayer.dto.playerDTOs.PlayerDTO;
+import com.example.demo.viewLayer.dto.playerDTOs.PlayerRegisterDTO;
 import com.example.demo.viewLayer.dto.TeamDTO;
 import com.example.demo.viewLayer.mapper.PlayerMapper;
 import com.example.demo.viewLayer.mapper.TeamMapper;
@@ -31,11 +31,11 @@ public class PlayerServiceImplementation implements PlayerService {
     private final TeamMapper teamMapper;
 
     @Override
-    public PlayerDTO createPlayer(PlayerRegisterDTO PlayerRegisterDTO) {
-        Player player = playerMapper.toEntity(PlayerRegisterDTO);
+    public PlayerDTO createPlayer(PlayerRegisterDTO playerRegisterDTO) {
+        Player player = playerMapper.toEntity(playerRegisterDTO);
 
-        Team team = teamRepository.findById(PlayerRegisterDTO.getTeamId())
-                        .orElseThrow(() -> new EntityNotFoundException("Team with id: '" + PlayerRegisterDTO.getTeamId() + "' not found"));
+        Team team = teamRepository.findById(playerRegisterDTO.getTeamId())
+                        .orElseThrow(() -> new EntityNotFoundException("Team with id: '" + playerRegisterDTO.getTeamId() + "' not found"));
 
         player.setSalary(0L);
         player.setExperience(BigDecimal.ZERO);
@@ -109,7 +109,7 @@ public class PlayerServiceImplementation implements PlayerService {
     @Override
     public void deleteById(long id) {
         if (!playerRepository.existsById(id)) {
-            throw new EntityNotFoundException("Team with id: '" + id + "' does not exist");
+            throw new EntityNotFoundException("Team with id: '" + id + "' not found");
         }
 
         playerRepository.deleteById(id);

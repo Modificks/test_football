@@ -18,18 +18,18 @@ public class TeamController {
 
     private final TeamService teamService;
 
-    @PostMapping("/create-team")
+    @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public TeamDTO createTeam(@Valid @RequestBody TeamDTO teamDTO) {
         return teamService.createTeam(teamDTO);
     }
 
-    @GetMapping("/get-teams")
+    @GetMapping("/get-all")
     public Set<TeamDTO> getTeams() {
         return teamService.getTeams();
     }
 
-    @GetMapping("/get-by-name")
+    @GetMapping("/get")
     public TeamDTO getTeamByName(@RequestParam String name) {
         return teamService.getByName(name);
     }

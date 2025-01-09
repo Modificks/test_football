@@ -24,7 +24,7 @@ public class TeamDTO {
     @Size(message = "Name of team country be up to 256 letter", max = 256)
     private String country;
 
-    @Min(value = 0, message = "Budget can not be an negative number")
+    @Min(value = 0, message = "Budget can`t be an negative number")
     private BigDecimal budget;
 
     @Max(value = 10, message = "Max size of commission must be 10%")

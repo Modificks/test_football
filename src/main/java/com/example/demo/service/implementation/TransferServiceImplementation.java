@@ -24,42 +24,47 @@ public class TransferServiceImplementation implements TransferService {
     private final PlayerRepository playerRepository;
     private final TeamRepository teamRepository;
 
-    @Transactional
     @Override
-    public void transferPlayer(Long playerId, Long fromTeamId, Long toTeamId) {
-        if (fromTeamId.equals(toTeamId)) {
-            throw new IllegalArgumentException("The player can not be transferred to the same team");
-        }
-
+    @Transactional
+    public void transferPlayer(long playerId, Long fromTeamId, long toTeamId) {
         Player player = playerRepository.findById(playerId)
                 .orElseThrow(() -> new IllegalArgumentException("Player with id '" + playerId + "' not found"));
-
-        Team fromTeam = teamRepository.findById(fromTeamId)
-                .orElseThrow(() -> new EntityNotFoundException("Team with id '" + fromTeamId + "' not found"));
 
         Team toTeam = teamRepository.findById(toTeamId)
                 .orElseThrow(() -> new EntityNotFoundException("Team with id '" + toTeamId + "' not found"));
 
-        if (!fromTeam.getPlayers().contains(player)) {
-            throw new EntityNotFoundException("Player with id '" + playerId + "' not found in team with id: '" + fromTeamId + "'");
+        if (fromTeamId == null) {
+            player.setTeam(toTeam);
+        } else {
+            if (fromTeamId.equals(toTeamId)) {
+                throw new IllegalArgumentException("The player can’t be transferred to the same team");
+            }
+
+            Team fromTeam = teamRepository.findById(fromTeamId)
+                    .orElseThrow(() -> new EntityNotFoundException("Team with id '" + fromTeamId + "' not found"));
+
+            if (!fromTeam.getPlayers().contains(player)) {
+                throw new EntityNotFoundException("Player with id '" + playerId + "' not found in team with id: '" + fromTeamId + "'");
+            }
+
+            BigDecimal fullTransferAmount = countTransferAmount(player, fromTeam);
+
+            if (toTeam.getBudget().compareTo(fullTransferAmount) < 0) {
+                throw new UnsupportedOperationException("Not enough funds to transfer. Transfer cost: " + fullTransferAmount + ". Available funds: " + toTeam.getBudget());
+            }
+
+            player.setTeam(toTeam);
+            fromTeam.setBudget(fromTeam.getBudget().add(fullTransferAmount));
+            toTeam.setBudget(toTeam.getBudget().subtract(fullTransferAmount));
+
+            teamRepository.save(fromTeam);
         }
 
-        BigDecimal fullTransferAmount = countTransferFee(player, fromTeam);
-
-        if (toTeam.getBudget().compareTo(fullTransferAmount) < 0) {
-            throw new UnsupportedOperationException("No enough funds to transfer. Transfer cost: " + fullTransferAmount + ". Available funds: " + toTeam.getBudget());
-        }
-
-        player.setTeam(toTeam);
-        fromTeam.setBudget(fromTeam.getBudget().add(fullTransferAmount));
-        toTeam.setBudget(toTeam.getBudget().subtract(fullTransferAmount));
-
-        playerRepository.save(player);
-        teamRepository.save(fromTeam);
         teamRepository.save(toTeam);
+        playerRepository.save(player);
     }
 
-    private BigDecimal countTransferFee(Player player, Team team) {
+    private BigDecimal countTransferAmount(Player player, Team team) {
         BigDecimal ageOfPlayer = BigDecimal.valueOf(ChronoUnit.YEARS.between(player.getDateOfBirth(), LocalDate.now()));
 
         BigDecimal transferValue = player.getExperience()

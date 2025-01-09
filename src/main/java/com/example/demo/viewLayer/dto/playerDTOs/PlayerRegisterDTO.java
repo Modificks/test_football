@@ -1,4 +1,4 @@
-package com.example.demo.viewLayer.dto;
+package com.example.demo.viewLayer.dto.playerDTOs;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;

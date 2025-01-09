@@ -19,8 +19,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
+@RequiredArgsConstructor
 public class TeamServiceImplementation implements TeamService {
 
     private final TeamRepository teamRepository;
@@ -31,7 +31,7 @@ public class TeamServiceImplementation implements TeamService {
     @Override
     public TeamDTO createTeam(TeamDTO teamDTO) {
         if (teamRepository.existsByName(teamDTO.getName())) {
-            throw new EntityAlreadyExistsException("Team with the same name already exists");
+            throw new EntityAlreadyExistsException("Team with name: '" + teamDTO.getName() + "' already exists");
         }
 
         Team team = teamMapper.toEntity(teamDTO);
@@ -69,7 +69,7 @@ public class TeamServiceImplementation implements TeamService {
         Team team = teams.stream()
                 .filter(t -> t.getName().toLowerCase().equals(nameLowerCase))
                 .findFirst()
-                .orElseThrow(() -> new EntityNotFoundException("Team with name: '" + name + "' does not exist"));
+                .orElseThrow(() -> new EntityNotFoundException("Team with name: '" + name + "' not found"));
 
         return teamMapper.toDto(team);
     }
@@ -77,7 +77,7 @@ public class TeamServiceImplementation implements TeamService {
     @Override
     public TeamDTO updateTeam(TeamDTO updateDTO) {
         Team existingTeam = teamRepository.findByName(updateDTO.getName())
-                .orElseThrow(() -> new EntityNotFoundException("Team with name: '" + updateDTO.getName() + "' does not exist"));
+                .orElseThrow(() -> new EntityNotFoundException("Team with name: '" + updateDTO.getName() + "' not found"));
 
         Long teamId = existingTeam.getId();
 
@@ -93,7 +93,7 @@ public class TeamServiceImplementation implements TeamService {
     @Override
     public void deleteByName(long id) {
         if (!teamRepository.existsById(id)) {
-            throw new EntityNotFoundException("Team with id: '" + id + "' does not exist");
+            throw new EntityNotFoundException("Team with id: '" + id + "' not found");
         }
 
         List<Player> playersInTeam = playerRepository.findByTeamId(id);

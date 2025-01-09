@@ -1,8 +1,8 @@
 package com.example.demo.viewLayer.mapper;
 
 import com.example.demo.domain.entity.Player;
-import com.example.demo.viewLayer.dto.PlayerDTO;
-import com.example.demo.viewLayer.dto.PlayerRegisterDTO;
+import com.example.demo.viewLayer.dto.playerDTOs.PlayerDTO;
+import com.example.demo.viewLayer.dto.playerDTOs.PlayerRegisterDTO;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
