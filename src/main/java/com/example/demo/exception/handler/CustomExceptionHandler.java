@@ -39,4 +39,16 @@ public class CustomExceptionHandler {
     public ResponseError handleEntityNotFoundException(EntityNotFoundException e) {
         return new ResponseError(e.getMessage(), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(UnsupportedOperationException.class)
+    @ResponseStatus(HttpStatus.PAYMENT_REQUIRED)
+    public ResponseError handleUnsupportedOperationException(UnsupportedOperationException e) {
+        return new ResponseError(e.getMessage(), HttpStatus.PAYMENT_REQUIRED);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseError handleIllegalArgumentException(IllegalArgumentException e) {
+        return new ResponseError(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }
